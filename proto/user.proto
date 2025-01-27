@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "internal/grpc/user";
+
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+    rpc Index(Empty) returns (GetAllUsersResponse);
+
+    rpc Get(GetUserByUsername) returns (UserResponse);
+    
+    rpc Store(CreateUserRequest) returns (UserResponse);
+
+    rpc Patch(UpdateUserRequest) returns (UserResponse);
+
+    rpc Delete(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message User {
+    int32 id = 1;
+    string username = 2;
+    string email = 3;
+    string first_name = 4;
+    string last_name = 5;
+    google.protobuf.Timestamp date_of_birth = 6;
+    string address = 7;
+    string phone_number = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    google.protobuf.Timestamp last_login = 11;
+    bool is_active = 12;
+    bool is_admin = 13;
+    string profile_picture = 14;
+    string bio = 15;
+}
+
+message GetUserByUsername {
+    string username = 1;
+}
+
+message UserResponse {
+    User user = 1;
+}
+
+message Empty {}
+
+message GetAllUsersResponse {
+    repeated User users = 1;
+}
+
+message CreateUserRequest {
+    string username = 1;
+    string password = 2;
+    string email = 3;
+    string first_name = 4;
+    string last_name = 5;
+    string date_of_birth = 6;
+    string address = 7;
+    string phone_number = 8;
+    string profile_picture = 9;
+    string bio = 10;
+}
+
+message UpdateUserRequest {
+    int32 id = 1;
+    string username = 2;
+    string email = 3;
+    string first_name = 4;
+    string last_name = 5;
+    google.protobuf.Timestamp date_of_birth = 6;
+    string address = 7;
+    string phone_number = 8;
+    string profile_picture = 9;
+    string bio = 10;
+    bool is_active = 11;
+    bool is_admin = 12;
+}
+
+message DeleteUserRequest {
+    int32 id = 1;
+}
+
+message DeleteUserResponse {
+    bool success = 1;
+}

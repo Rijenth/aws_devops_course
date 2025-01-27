@@ -1,0 +1,38 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "format": "prettier ./src --write",
+    "format:lint": "pnpm run lint && pnpm run format",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "@protobuf-ts/grpcweb-transport": "^2.9.4",
+    "@protobuf-ts/runtime": "^2.9.4",
+    "@protobuf-ts/runtime-rpc": "^2.9.4",
+    "@vuepic/vue-datepicker": "^9.0.3",
+    "jwt-decode": "^4.0.0",
+    "vue": "^3.4.37",
+    "vue-router": "^4.4.5",
+    "vue3-toastify": "^0.2.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@protobuf-ts/plugin": "^2.9.4",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "eslint": "^9.13.0",
+    "eslint-plugin-vue": "^9.29.0",
+    "globals": "^15.11.0",
+    "prettier": "3.3.3",
+    "sass-embedded": "^1.80.3",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.10.0",
+    "vite": "^5.4.1",
+    "vue-tsc": "^2.0.29"
+  }
+}
