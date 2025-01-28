@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/rijenth/gRPC/internal/contextkeys"
-	"github.com/rijenth/gRPC/internal/domain"
-	pbAuth "github.com/rijenth/gRPC/internal/grpc/auth"
-	"github.com/rijenth/gRPC/internal/infrastructure/services"
-	"github.com/rijenth/gRPC/internal/usecase"
+	"github.com/rijenth/aws_devops_course/internal/contextkeys"
+	"github.com/rijenth/aws_devops_course/internal/domain"
+	pbAuth "github.com/rijenth/aws_devops_course/internal/grpc/auth"
+	"github.com/rijenth/aws_devops_course/internal/infrastructure/services"
+	"github.com/rijenth/aws_devops_course/internal/usecase"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

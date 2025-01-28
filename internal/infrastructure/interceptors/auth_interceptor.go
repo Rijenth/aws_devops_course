@@ -4,11 +4,11 @@ import (
 	"context"
 	"strings"
 
-	"github.com/rijenth/gRPC/internal/contextkeys"
-	authpb "github.com/rijenth/gRPC/internal/grpc/auth"
+	"github.com/rijenth/aws_devops_course/internal/contextkeys"
+	authpb "github.com/rijenth/aws_devops_course/internal/grpc/auth"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/rijenth/gRPC/internal/domain"
+	"github.com/rijenth/aws_devops_course/internal/domain"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

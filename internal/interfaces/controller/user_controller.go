@@ -3,12 +3,12 @@ package controller
 import (
 	"context"
 
-	pb "github.com/rijenth/gRPC/internal/grpc/user"
+	pb "github.com/rijenth/aws_devops_course/internal/grpc/user"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/rijenth/gRPC/internal/usecase"
+	"github.com/rijenth/aws_devops_course/internal/usecase"
 )
 
 type UserController struct {

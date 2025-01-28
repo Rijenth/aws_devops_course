@@ -6,7 +6,7 @@ import (
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/rijenth/gRPC/internal/config"
+	"github.com/rijenth/aws_devops_course/internal/config"
 )
 
 func InitDB() (*sql.DB, error) {
