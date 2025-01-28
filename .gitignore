@@ -178,3 +178,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+### CUSTOM ###
+.env*
+!.env.example
