@@ -4,7 +4,6 @@ provider "aws" {
   secret_key = var.AWS_SECRET_KEY
 }
 
-# BEGIN Database
 resource "aws_instance" "mysql_server" {
   ami                    = var.AWS_AMI[var.AWS_REGION]
   instance_type          = "t2.micro"
@@ -55,11 +54,9 @@ resource "aws_key_pair" "grpc_project" {
 output "mysql_instance_ip" {
   value = aws_instance.mysql_server.public_ip
 }
-# END Database
 
 # ---------------------------------------------------- #
 
-# BEGIN Golang API
 resource "aws_instance" "golang_server" {
   ami                    = var.AWS_AMI[var.AWS_REGION]
   instance_type          = "t2.micro"
@@ -103,8 +100,29 @@ resource "aws_security_group" "go_sg" {
   }
 }
 
-output "golang_instance_ip" {
-  value = aws_instance.golang_server.public_ip
-}
+# 🔐 Ajouter un Security Group pour Envoy
+resource "aws_security_group" "envoy_sg" {
+  name        = "envoy-sg"
+  description = "Sécurité pour Envoy Proxy"
 
-# END Golang API
+  ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # ⚠️ À restreindre pour la sécurité
+  }
+
+  ingress {
+    from_port   = 9901
+    to_port     = 9901
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
