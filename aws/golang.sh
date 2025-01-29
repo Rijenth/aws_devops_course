@@ -37,13 +37,10 @@ sudo docker build -t go-api -f Dockerfile.api.prod .
 
 sudo docker run -d --name go-container -p 12345:12345 go-api
 
-sudo docker build -t envoy-proxy -f ./envoy/Dockerfile .
+sudo docker build -t envoy-proxy -f ./envoy/Dockerfile.prod .
 
 sudo docker run -d \
   --name envoy-container \
   -p 8000:8000 \
   -p 9901:9901 \
-  -v $(pwd)/envoy/envoy.prod.yaml:/etc/envoy.yaml \
   envoy-proxy
-
-echo "✅ Envoy et Go API sont lancés !"
