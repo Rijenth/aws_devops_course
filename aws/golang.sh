@@ -29,8 +29,6 @@ cd aws_devops_course
 # Modification du DB host dans le .env
 mv .env.example .env
 
-echo $MYSQL_HOST
-
 sed -i "s/^DB_HOST=.*/DB_HOST=\"$MYSQL_HOST\"/" /home/ubuntu/aws_devops_course/.env
 
 # 🚀 Build puis démarrer l'API Go
