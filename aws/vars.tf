@@ -14,3 +14,5 @@ variable "AWS_AMI" {
     "eu-west-3" = "ami-06e02ae7bdac6b938"
   }
 }
+
+variable "GITHUB_AUTH_TOKEN" {}

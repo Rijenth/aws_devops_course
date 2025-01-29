@@ -4,6 +4,7 @@ provider "aws" {
   secret_key = var.AWS_SECRET_KEY
 }
 
+# BEGIN Database
 resource "aws_instance" "mysql_server" {
   ami                    = var.AWS_AMI[var.AWS_REGION]
   instance_type          = "t2.micro"
@@ -13,7 +14,7 @@ resource "aws_instance" "mysql_server" {
 
   #security_groups = [aws_security_group.mysql_sg.name]
 
-  user_data = file("${path.module}/userdata.sh")
+  user_data = file("${path.module}/database.sh")
 
   tags = {
     Name = "MySQL-EC2"
@@ -35,7 +36,7 @@ resource "aws_security_group" "mysql_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # ⚠️ À restreindre avec ton IP pour la sécurité
+    cidr_blocks = ["0.0.0.0/0"] # ⚠️ À restreindre car accessible à tous
   }
 
   egress {
@@ -54,8 +55,56 @@ resource "aws_key_pair" "grpc_project" {
 output "mysql_instance_ip" {
   value = aws_instance.mysql_server.public_ip
 }
+# END Database
 
+# ---------------------------------------------------- #
 
+# BEGIN Golang API
+resource "aws_instance" "golang_server" {
+  ami                    = var.AWS_AMI[var.AWS_REGION]
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.go_sg.id]
+  key_name               = aws_key_pair.grpc_project.key_name
+  user_data = templatefile("${path.module}/golang.sh", {
+    mysql_instance_ip = aws_instance.mysql_server.public_ip
+    github_auth_token = var.GITHUB_AUTH_TOKEN
+  })
 
-# mysql_instance_ip = "35.180.97.228"
-# mysql_public_ip = "35.180.97.228"
+  tags = {
+    Name = "Golang-EC2"
+  }
+
+  depends_on = [aws_instance.mysql_server]
+}
+
+# 🔐 Security Group pour l'instance Golang
+resource "aws_security_group" "go_sg" {
+  name = "go-sg"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # ⚠️ À restreindre car accessible à tous
+  }
+
+  ingress {
+    from_port   = 12345
+    to_port     = 12345
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+output "golang_instance_ip" {
+  value = aws_instance.golang_server.public_ip
+}
+
+# END Golang API

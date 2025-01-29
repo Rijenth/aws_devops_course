@@ -6,6 +6,7 @@ main
 ./web/node_modules/
 
 .env
+aws/.terraform.tfstate.lock.info
 aws/terraform.tfvars
 aws/.terraform.lock.hcl
 aws/terraform.tfstate
