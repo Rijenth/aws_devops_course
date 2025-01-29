@@ -103,7 +103,7 @@ resource "aws_security_group" "go_sg" {
 # 🔐 Ajouter un Security Group pour Envoy
 resource "aws_security_group" "envoy_sg" {
   name        = "envoy-sg"
-  description = "Sécurité pour Envoy Proxy"
+  description = "Securite pour Envoy Proxy"
 
   ingress {
     from_port   = 8000
