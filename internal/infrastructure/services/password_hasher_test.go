@@ -3,27 +3,21 @@ package services_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/rijenth/aws_devops_course/internal/infrastructure/services"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestHashPassword(t *testing.T) {
-	hasher := services.NewPasswordHasher()
+func TestPasswordHasher(t *testing.T) {
+	hasher := services.NewBcryptPasswordHasher(10)
 
-	password := "monMotDePasse"
+	password := "mypassword"
 	hash, err := hasher.HashPassword(password)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hash)
 
-	isValid := hasher.CheckPasswordHash(password, hash)
-	assert.True(t, isValid)
-}
+	err = hasher.ComparePassword(hash, password)
+	assert.NoError(t, err)
 
-func TestCheckPasswordHash_Failure(t *testing.T) {
-	hasher := services.NewPasswordHasher()
-
-	password := "motDePasse"
-	wrongHash := "hashInvalide"
-	isValid := hasher.CheckPasswordHash(password, wrongHash)
-	assert.False(t, isValid)
+	err = hasher.ComparePassword(hash, "wrongpassword")
+	assert.Error(t, err)
 }

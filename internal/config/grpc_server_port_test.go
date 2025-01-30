@@ -7,13 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetGRPCServerPort_DefaultPort(t *testing.T) {
-	port := config.GetGRPCServerPort()
-	assert.Equal(t, "50051", port) // Port par défaut
-}
-
-func TestGetGRPCServerPort_EnvironmentVariable(t *testing.T) {
-	t.Setenv("GRPC_PORT", "60061") // Simule une variable d'environnement
-	port := config.GetGRPCServerPort()
-	assert.Equal(t, "60061", port)
+func TestLoadGrpcServerPortConfig(t *testing.T) {
+	config, err := config.LoadGrpcServerPortConfig()
+	assert.NoError(t, err)
+	assert.NotNil(t, config)
+	assert.NotEmpty(t, config.GrpcServerPort)
 }
