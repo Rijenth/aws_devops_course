@@ -183,6 +183,7 @@ $RECYCLE.BIN/
 .env*
 !.env.example
 .secrets
+/main
 
 ### AWS ###
 aws/.terraform.tfstate.lock.info
