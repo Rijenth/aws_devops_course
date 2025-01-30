@@ -34,10 +34,11 @@ sed -i "s/^DB_HOST=.*/DB_HOST=\"$MYSQL_HOST\"/" /home/ubuntu/aws_devops_course/.
 # 🚀 Build puis démarrer l'API Go
 
 sudo docker build -t go-api -f Dockerfile.api.prod .
+sudo docker build -t envoy-proxy -f ./envoy/Dockerfile.prod .
+
+docker network create envoy-network
 
 sudo docker run -d --name go-container -p 12345:12345 go-api
-
-sudo docker build -t envoy-proxy -f ./envoy/Dockerfile.prod .
 
 sudo docker run -d \
   --name envoy-container \
