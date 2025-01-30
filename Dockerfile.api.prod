@@ -1,0 +1,44 @@
+# ETAPE 1 : Build du binaire dans une image intermédiaire (builder)
+FROM golang:1.23.1 AS builder
+
+# Définir le fuseau horaire
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers du projet
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copier le reste du code source
+COPY . .
+
+# Compiler l'application
+RUN go build -o /server ./cmd/server/main.go
+
+# ETAPE 2 : Image finale optimisée pour la production
+FROM debian:bookworm-slim
+
+# Installer uniquement les dépendances nécessaires pour exécuter le binaire
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier le binaire compilé depuis l’étape de build
+COPY --from=builder /server /app/server
+
+# Copier le fichier .env
+COPY --from=builder /app/.env /app/.env
+
+# Définir le port d'écoute
+ENV PORT=12345
+
+# Exposer le port
+EXPOSE 12345
+
+# Lancer l'application
+CMD ["/app/server"]

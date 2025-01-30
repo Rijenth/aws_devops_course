@@ -179,6 +179,15 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### CUSTOM ###
+### ENVIRONEMENT ###
 .env*
 !.env.example
+
+### AWS ###
+aws/.terraform.tfstate.lock.info
+aws/terraform.tfvars
+aws/.terraform.lock.hcl
+aws/terraform.tfstate
+aws/terraform.tfstate.backup
+aws/.terraform
+aws/.ssh
