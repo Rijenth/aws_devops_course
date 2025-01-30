@@ -60,7 +60,7 @@ output "mysql_instance_ip" {
 resource "aws_instance" "golang_server" {
   ami                    = var.AWS_AMI[var.AWS_REGION]
   instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.go_sg.id]
+  vpc_security_group_ids = [aws_security_group.go_sg.id, aws_security_group.envoy_sg.id]
   key_name               = aws_key_pair.grpc_project.key_name
   user_data = templatefile("${path.module}/golang.sh", {
     mysql_instance_ip = aws_instance.mysql_server.public_ip

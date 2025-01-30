@@ -38,10 +38,11 @@ sudo docker build -t envoy-proxy -f ./envoy/Dockerfile.prod .
 
 docker network create envoy-network
 
-sudo docker run -d --name go-container -p 12345:12345 go-api
+sudo docker run -d --name go-container --network envoy-network -p 12345:12345 go-api
 
 sudo docker run -d \
   --name envoy-container \
+  --network envoy-network \
   -p 8000:8000 \
   -p 9901:9901 \
   envoy-proxy
