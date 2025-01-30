@@ -22,7 +22,7 @@ Ce projet a pour objectif d'approfondir mes connaissances sur le **fonctionnemen
 ### Cloner le dépôt
 
 ```bash
-git clone https://github.com/rijenth/grpc.git
+git clone https://github.com/rijenth/aws_devops_course.git
 ```
 
 ### Lancer les conteneurs
