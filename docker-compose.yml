@@ -1,83 +1,83 @@
 services:
-  vue:
-    container_name: vue
-    image: node:23.0.0
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    volumes:
-      - ./web/src:/app/src
-      - /app/node_modules
-    ports:
-      - 5173:5173
-    restart: always
-    networks:
-      - envoy-network
+    vue:
+        container_name: vue
+        image: node:23.0.0
+        build:
+            context: ./web
+            dockerfile: Dockerfile
+        volumes:
+            - ./web/src:/app/src
+            - /app/node_modules
+        ports:
+            - 5173:5173
+        restart: always
+        networks:
+            - envoy-network
 
-  go:
-    container_name: go
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      Port: 12345
-    ports:
-      - "12345:12345"
-    volumes:
-      - ./:/app
-    restart: always
-    depends_on:
-      mysql:
-        condition: service_healthy
-    networks:
-      - envoy-network
+    go:
+        container_name: go
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            Port: 12345
+        ports:
+            - '12345:12345'
+        volumes:
+            - ./:/app
+        restart: always
+        depends_on:
+            mysql:
+                condition: service_healthy
+        networks:
+            - envoy-network
+        entrypoint: ['/app/entrypoint.sh']
 
-  envoy:
-    container_name: envoy
-    build:
-      context: ./envoy
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-      - "9901:9901"
-    volumes:
-      - ./envoy/envoy.yaml:/etc/envoy.yaml
-    depends_on:
-      - go
-    networks:
-      - envoy-network
+    envoy:
+        container_name: envoy
+        build:
+            context: ./envoy
+            dockerfile: Dockerfile
+        ports:
+            - '8000:8000'
+            - '9901:9901'
+        volumes:
+            - ./envoy/envoy.yaml:/etc/envoy.yaml
+        depends_on:
+            - go
+        networks:
+            - envoy-network
 
-  mysql:
-    container_name: mysql
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: database
-    healthcheck:
-      test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
-      interval: 5s
-      timeout: 2s
-      retries: 3
-    ports:
-      - "3306:3306"
-    restart: always
-    volumes:
-      - ./database:/docker-entrypoint-initdb.d/:ro
-    networks:
-      - envoy-network
-    
-  adminer:
-    container_name: adminer
-    depends_on:
-      - mysql
-    image: adminer
-    ports:
-      - 8080:8080
-    restart: always
-    networks:
-      - envoy-network
+    mysql:
+        container_name: mysql
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: database
+        healthcheck:
+            test: ['CMD', 'mysql', '-uroot', '-proot', '-e', 'SELECT 1']
+            interval: 5s
+            timeout: 2s
+            retries: 3
+        ports:
+            - '3306:3306'
+        restart: always
+        volumes:
+            - ./database:/docker-entrypoint-initdb.d/:ro
+        networks:
+            - envoy-network
+
+    adminer:
+        container_name: adminer
+        depends_on:
+            - mysql
+        image: adminer
+        ports:
+            - 8080:8080
+        restart: always
+        networks:
+            - envoy-network
 
 networks:
-  envoy-network:
-    driver: bridge
- 
+    envoy-network:
+        driver: bridge

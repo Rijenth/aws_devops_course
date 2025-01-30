@@ -1,44 +1,39 @@
-# ETAPE 1 : Build du binaire dans une image intermédiaire (builder)
+# Étape de build
 FROM golang:1.23.1 AS builder
 
-# Définir le fuseau horaire
+# Définition du fuseau horaire
 RUN apt-get update && apt-get install -y tzdata && \
     ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# Définir le répertoire de travail
+# Définition du répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers du projet
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Copier le reste du code source
+# Copie des fichiers source
 COPY . .
 
-# Compiler l'application
-RUN go build -o /server ./cmd/server/main.go
+# Installation de migrate pour la gestion des migrations
+RUN go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
-# ETAPE 2 : Image finale optimisée pour la production
-FROM debian:bookworm-slim
+# Téléchargement des dépendances et build de l'application
+RUN go mod download
+RUN go build -o main ./cmd/server/main.go
 
-# Installer uniquement les dépendances nécessaires pour exécuter le binaire
-RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+# Étape finale pour l’image optimisée
+FROM debian:latest
 
-# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le binaire compilé depuis l’étape de build
-COPY --from=builder /server /app/server
+# Copie de l'exécutable compilé
+COPY --from=builder /app/main /app/main
 
-# Copier le fichier .env
-COPY --from=builder /app/.env /app/.env
+# Copie de migrate et des fichiers de migration
+COPY --from=builder /go/bin/migrate /usr/bin/migrate
+COPY --from=builder /app/internal/infrastructure/database/migrations /app/migrations
 
-# Définir le port d'écoute
-ENV PORT=12345
+# Copie du script d’entrée
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Exposer le port
-EXPOSE 12345
-
-# Lancer l'application
-CMD ["/app/server"]
+# Commande d’entrée
+ENTRYPOINT ["/app/entrypoint.sh"]
