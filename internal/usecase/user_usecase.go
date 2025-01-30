@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/rijenth/gRPC/internal/contextkeys"
-	"github.com/rijenth/gRPC/internal/domain"
-	pbUser "github.com/rijenth/gRPC/internal/grpc/user"
+	"github.com/rijenth/aws_devops_course/internal/contextkeys"
+	"github.com/rijenth/aws_devops_course/internal/domain"
+	pbUser "github.com/rijenth/aws_devops_course/internal/grpc/user"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

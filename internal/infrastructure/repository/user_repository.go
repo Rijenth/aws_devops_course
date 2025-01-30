@@ -6,8 +6,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/rijenth/gRPC/internal/contextkeys"
-	"github.com/rijenth/gRPC/internal/domain"
+	"github.com/rijenth/aws_devops_course/internal/contextkeys"
+	"github.com/rijenth/aws_devops_course/internal/domain"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

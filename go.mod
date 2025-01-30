@@ -1,4 +1,4 @@
-module github.com/rijenth/gRPC
+module github.com/rijenth/aws_devops_course
 
 go 1.23.1
 
