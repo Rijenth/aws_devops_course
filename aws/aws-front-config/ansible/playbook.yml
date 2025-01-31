@@ -48,8 +48,9 @@
     #     chdir: /home/admin/vusJs_cloud/
     #   when: git_repo.stat.exists
 
-    - name: Lancer l’application avec Docker Compose (rebuild)
+    - name: Lancer uniquement le service Vue.js avec Docker Compose
       command:
-        cmd: docker-compose up --build -d
+        cmd: docker compose up --build -d vue
       args:
         chdir: /home/admin/vusJs_cloud/
+
