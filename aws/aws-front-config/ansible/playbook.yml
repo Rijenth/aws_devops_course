@@ -1,0 +1,55 @@
+- name: Déploiement d'une application Dockerisée avec Git
+  hosts: web
+  become: true
+  tasks:
+    - name: Installer les dépendances
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - git
+        state: present
+
+    - name: Ajouter la clé GPG de Docker
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+    - name: Ajouter le repo Docker
+      shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+    - name: Installer Docker et Docker Compose
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose
+        state: present
+
+    - name: Ajouter l'utilisateur au groupe Docker
+      user:
+        name: admin
+        groups: docker
+        append: true
+
+    - name: Cloner le projet depuis Git (si non existant)
+      git:
+        repo: "git@github.com:Rijenth/aws_devops_course.git"
+        dest: /home/admin/vusJs_cloud
+        version: main
+        accept_hostkey: yes
+      when: not git_repo.stat.exists
+
+    # - name: Mettre à jour le projet avec la dernière version
+    #   command:
+    #     cmd: git pull origin main
+    #   args:
+    #     chdir: /home/admin/vusJs_cloud/
+    #   when: git_repo.stat.exists
+
+    - name: Lancer l’application avec Docker Compose (rebuild)
+      command:
+        cmd: docker-compose up --build -d
+      args:
+        chdir: /home/admin/vusJs_cloud/
